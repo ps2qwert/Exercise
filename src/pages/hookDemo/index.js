@@ -24,11 +24,6 @@ import React, { useState,useEffect,useCallback } from 'react';
 //   return isOnline ? 'Online' : 'Offline';
 // }
 
-const friendList = [
-  { id: 1, name: 'Phoebe' },
-  { id: 2, name: 'Rachel' },
-  { id: 3, name: 'Ross' },
-];
 
 function useToggle(initialValue) {
   const [value, setValue] = useState(!!initialValue)
@@ -41,11 +36,12 @@ function Example(){
   const [visiable,toggleVisiable] = useState(false)
   return (
     <div>
+      <h3>示例1：</h3>
       <button onClick={()=>toggleVisiable(visiable => !visiable)}>显示</button>
       {
         visiable
-        ? <div>1</div>
-        : <div>2</div>
+        ? <div>打开了</div>
+        : <div>隐藏了</div>
       }
     </div>
   )
@@ -62,8 +58,9 @@ function Example1(){
   }
   return (
     <div className={styles.normal}>
+      <h3>示例2：</h3>
       {
-        todos.map((e)=> <div>{e.text}</div>)
+        todos.map((e,index)=> <div key={index}>{e.text}</div>)
       }
       <button onClick={addTodo}>
         add Todos
@@ -74,15 +71,20 @@ function Example1(){
 
 
 
-function ChatRecipientPicker() {
+function Example2() {
+  const friendList = [
+    { id: 1, name: 'Phoebe' },
+    { id: 2, name: 'Rachel' },
+    { id: 3, name: 'Ross' },
+  ];  
   const [recipientID, setRecipientID] = useState(1);
   return (
     <>
-      <div/>
+      <h3>示例3：</h3>
       {
-        friendList.map((e)=>{
+        friendList.map((e,index)=>{
           return (
-            <div onClick={()=> setRecipientID(e.id)}>
+            <div onClick={()=> setRecipientID(e.id)} key={index}>
               {recipientID === e.id ? '选中' : ''}{e.name}
             </div>
           )
@@ -94,18 +96,16 @@ function ChatRecipientPicker() {
 
 function useStateDemo(){
     const [count, setCount] = useState(110);
-    const [enable, toggleEnable] = useToggle()
     useEffect(() => {
       // 使用浏览器的 API 更新页面标题
       console.log(`You clicked ${count} times`);
     });
   
     return (
-      <div className={styles.normal}>
-        <input value={enable} onClick={toggleEnable}></input>
+      <div>
         <Example></Example>
         <Example1></Example1>
-        <ChatRecipientPicker/>
+        <Example2/>
       </div>
     );
 }

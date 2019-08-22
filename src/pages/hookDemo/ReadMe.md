@@ -48,3 +48,30 @@ function Example1(){
     );
 }
 ```
+
+### e.g 设置数组选中
+
+```
+function Example2() {
+  const friendList = [
+    { id: 1, name: 'Phoebe' },
+    { id: 2, name: 'Rachel' },
+    { id: 3, name: 'Ross' },
+  ];  
+  const [recipientID, setRecipientID] = useState(1);
+  return (
+    <>
+      <h3>示例3：</h3>
+      {
+        friendList.map((e,index)=>{
+          return (
+            <div onClick={()=> setRecipientID(e.id)} key={index}>
+              {recipientID === e.id ? '选中' : ''}{e.name}
+            </div>
+          )
+        })
+      }
+    </>
+  );
+}
+```

@@ -1,10 +1,10 @@
-
-.normal {
-  font-family: Georgia, sans-serif;
-  margin-top: 4em;
-  text-align: center;
+h3{
+  text-align: left
 }
-
+.normal{
+  display: flex;
+  flex-direction: column
+}
 .welcome {
   height: 328px;
   background-size: 388px 328px;
