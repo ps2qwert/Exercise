@@ -75,3 +75,58 @@ function Example2() {
   );
 }
 ```
+
+
+## useEffect
+
+> 在hook,使用useEffect代替了class里面的生命周期，如componentDidMount，componentWillUnmount。使其更加的简单简洁。如下代码就可以每次组件更新的时候打印出visiable当前的状态。
+
+```
+function Example(){
+
+  const [visiable,toggleVisiable] = useState(false)
+
+  useEffect(() => {
+    // 使用浏览器的 API 更新页面标题
+    console.log(visiable);
+  });
+  
+  return (
+    <div>
+      <button onClick={()=>toggleVisiable(visiable => !visiable)}>显示</button>
+      {
+        visiable
+        ? <div>1</div>
+        : <div>2</div>
+      }
+    </div>
+  )
+}
+```
+
+> 当你需要想componentDidMount一样只执行一次的话,可以在useEffect第二参数传个空数组。useEffect第二个参数是用来，当props参数改变时，useEffect才执行。需要注意第二参数是一个数组。
+
+```
+  // 只执行一次
+  useEffect(() => {
+    console.log(visiable);
+  },[]);
+
+  // 当传入的props中的data修改了才执行
+  useEffect(() => {
+    console.log(visiable);
+  },[props.data]); 
+```
+
+> 在业务中我们可能需要在componentWillUnmount中把数据清空，取消监听等操作。在useEffect中就是：
+```
+  
+  useEffect(() => {
+    // 使用浏览器的 API 更新页面标题
+    console.log(visiable);
+    retrun ()=>{
+      setCounter(false)
+    }
+  });
+```
+

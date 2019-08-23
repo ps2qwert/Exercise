@@ -32,8 +32,12 @@ function useToggle(initialValue) {
   return [value, toggler]
 }
 
-function Example(){
+function Example(props){
   const [visiable,toggleVisiable] = useState(false)
+  useEffect(() => {
+    // 使用浏览器的 API 更新页面标题
+    console.log(visiable);
+  },[props.data]);
   return (
     <div>
       <h3>示例1：</h3>
@@ -103,7 +107,8 @@ function useStateDemo(){
   
     return (
       <div>
-        <Example></Example>
+        <button onClick={()=>{setCount(count + 1)}}>111</button>
+        <Example data={count}></Example>
         <Example1></Example1>
         <Example2/>
       </div>
