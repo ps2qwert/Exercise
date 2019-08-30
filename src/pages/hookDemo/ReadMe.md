@@ -13,6 +13,7 @@ function Example(){
   return (
     <div>
       // 这边使用的函数式更新，因为更新值需要通过之前的值反转一下
+      <h3>示例1：</h3>
       <button onClick={()=>toggleVisiable(visiable => !visiable)}>显示</button>
       {
         visiable
@@ -38,6 +39,7 @@ function Example1(){
     }
     return (
       <div className={styles.normal}>
+        <h3>示例2：</h3>
         {
           todos.map((e)=> <div>{e.text}</div>)
         }
@@ -120,13 +122,40 @@ function Example(){
 
 > 在业务中我们可能需要在componentWillUnmount中把数据清空，取消监听等操作。在useEffect中就是：
 ```
-  
+  //在return里面写函数就可以
   useEffect(() => {
-    // 使用浏览器的 API 更新页面标题
-    console.log(visiable);
-    retrun ()=>{
+    return ()=>{
       setCounter(false)
     }
   });
+```
+
+## 自定义Hook
+
+> 在平时业务经常会组件之间重用一些状态逻辑，如modal弹窗的显示隐藏，再每一个class里面都要设置setState一个状态true和false。我们就可以把这个提取出来写一个自定义HooK,还是以示例一为例：
+
+```
+//如官网所说自定义Hook更像是一种约定而不是功能，以“use”开头命名。我们在这里就把更改true和false的逻辑提取出来了，在其他函数组件中也可以直接调用。
+function useToggle(initialValue) {
+  const [value, setValue] = useState(!!initialValue)
+  const toggler = useCallback(() => setValue(value => !value), [])
+  return [value, toggler]
+}
+
+//在组件中只要将状态和行为解构出来，不用考虑内部的逻辑，非常的方便。
+function Example(props){
+  const [visiable,toggleVisiable] = useToggle(false)
+  return (
+    <div>
+      <h3>示例1：</h3>
+      <button onClick={toggleVisiable}>显示</button>
+      {
+        visiable
+        ? <div>打开了</div>
+        : <div>隐藏了</div>
+      }
+    </div>
+  )
+}
 ```
 
