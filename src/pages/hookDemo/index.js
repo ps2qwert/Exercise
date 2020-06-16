@@ -1,28 +1,9 @@
 import styles from './index.css';
 import { formatMessage } from 'umi-plugin-locale';
-import React, { useState,useEffect,useCallback } from 'react';
+import React, { useState,useEffect,useCallback,useContext } from 'react';
 
 
-// function FriendStatus(props) {
-//   const [isOnline, setIsOnline] = useState(null);
-
-//   function handleStatusChange(status) {
-//     setIsOnline(status.isOnline);
-//   }
-
-//   useEffect(() => {
-//     ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
-
-//     return () => {
-//       ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
-//     };
-//   });
-
-//   if (isOnline === null) {
-//     return 'Loading...';
-//   }
-//   return isOnline ? 'Online' : 'Offline';
-// }
+const AppContext = React.createContext({});
 
 
 function useToggle(initialValue) {
@@ -33,7 +14,7 @@ function useToggle(initialValue) {
 }
 
 function Example(props){
-  const [visiable,toggleVisiable] = useState(false)
+  const [visiable,toggleVisiable] = useToggle(false)
   useEffect(() => {
     // 使用浏览器的 API 更新页面标题
     console.log(visiable);
@@ -41,7 +22,7 @@ function Example(props){
   return (
     <div>
       <h3>示例1：</h3>
-      <button onClick={()=>toggleVisiable(visiable => !visiable)}>显示</button>
+      <button onClick={toggleVisiable}>显示</button>
       {
         visiable
         ? <div>打开了</div>
@@ -52,8 +33,8 @@ function Example(props){
 }
 
 function Example1(){
+  const { username } = useContext(AppContext)
   const [todos, setTodos] = useState([{ text: 'Learn Hooks' }]);
-
   let addTodo = () =>{
     setTodos([
       ...todos,
@@ -67,7 +48,7 @@ function Example1(){
         todos.map((e,index)=> <div key={index}>{e.text}</div>)
       }
       <button onClick={addTodo}>
-        add Todos
+        add Todos{username}
       </button>
     </div>
   );
@@ -76,6 +57,7 @@ function Example1(){
 
 
 function Example2() {
+  const { username } = useContext(AppContext)
   const friendList = [
     { id: 1, name: 'Phoebe' },
     { id: 2, name: 'Rachel' },
@@ -94,24 +76,45 @@ function Example2() {
           )
         })
       }
+      <div>{username}</div>
     </>
   );
 }
 
+const Child = (({data}) =>{
+  console.log('child render...', data)
+  const [name, setName] = useState(data)
+  return (
+      <div>
+          <div onClick={()=>setName('jack')}>child</div>
+          <div>{name} --- {data}</div>
+      </div>
+  );
+})
+
 function useStateDemo(){
     const [count, setCount] = useState(110);
+    const [name, setName] = useState()
     useEffect(() => {
       // 使用浏览器的 API 更新页面标题
       console.log(`You clicked ${count} times`);
     });
   
     return (
-      <div>
+      <AppContext.Provider value={{
+        username: count
+      }}>
         <button onClick={()=>{setCount(count + 1)}}>111</button>
         <Example data={count}></Example>
         <Example1></Example1>
         <Example2/>
-      </div>
+        <div>
+            {count}
+        </div>
+        <button onClick={()=>setCount(count+1)}>update count </button>
+        <button onClick={()=>setName('jack')}>update name </button>
+        <Child data={name}></Child>
+      </AppContext.Provider>
     );
 }
 

@@ -2,6 +2,8 @@
 
 ## useState
 
+> 这是个可以用来定义一个“state”变量的方法
+
 ### e.g 通过useState控制组件显示/隐藏
 
 > 相信这个需求大家在实际运用中遇到的比较多，下面一起看看使用useState的实现方式吧
@@ -81,8 +83,7 @@ function Example2() {
 
 ## useEffect
 
-> 在hook,使用useEffect代替了class里面的生命周期，如componentDidMount，componentWillUnmount。使其更加的简单简洁。如下代码就可以每次组件更新的时候打印出visiable当前的状态。
-
+> 在hook里面,使用useEffect可以让你想在什么数据变动的时候进行什么样操作,而不是像class类里的生命周期一样,让你在什么阶段做什么事情,使其更加的简单简洁。如下代码就可以每次组件更新的时候打印出visiable当前的状态。
 ```
 function Example(){
 
@@ -159,3 +160,70 @@ function Example(props){
 }
 ```
 
+## useContext
+
+> 如果大家之前对 context 比较熟悉，应该非常容易理解useContext,它就是给你在hook有访问上下文能力。
+
+```
+
+const AppContext = React.createContext({});
+function useStateDemo(){
+    const [count, setCount] = useState(110);
+  
+    return (
+      <AppContext.Provider value={{
+        username: count
+      }}>
+        //调用useContext 的组件总会在 context 值变化时重新渲染
+        <Example1></Example1>
+        <Example2/>
+      </AppContext.Provider>
+    );
+}
+
+function Example1(){
+
+  const { username } = useContext(AppContext)
+  return (
+    <div className={styles.normal}>{username}
+    </div>
+  );
+}
+
+
+function Example2() {
+  const { username } = useContext(AppContext)
+  return (
+      <div>{username}</div>
+  );
+}
+```
+
+
+## useReducer
+
+> useReducer也是用于更新状态的一种方式，但是它比useState更复杂一点,如果之前熟悉redux的话基本很容易理解。它接受一个reducer函数和初始的状态，并返回实际的state和dispatch函数。通过dispatch函数接收做什么操作来更改状态。
+
+```
+const initialState = 0;
+const reducer = (state, action) => {
+  switch (action) {
+    case 'increment': return state + 1;
+    case 'decrement': return state - 1;
+    case 'reset': return 0;
+    default: throw new Error('Unexpected action');
+  }
+};
+
+const Example01 = () => {
+  const [count, dispatch] = useReducer(reducer, initialState);
+  return (
+    <div>
+      {count}
+      <button onClick={() => dispatch('increment')}>+1</button>
+      <button onClick={() => dispatch('decrement')}>-1</button>
+      <button onClick={() => dispatch('reset')}>reset</button>
+    </div>
+  );
+};
+```
