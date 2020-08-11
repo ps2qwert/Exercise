@@ -1,7 +1,7 @@
 import styles from './index.css';
 import { formatMessage } from 'umi-plugin-locale';
 import React, { useState,useEffect,useCallback,useContext } from 'react';
-
+import {useForm} from './hook'
 
 const AppContext = React.createContext({});
 
@@ -18,7 +18,7 @@ function Example(props){
   useEffect(() => {
     // 使用浏览器的 API 更新页面标题
     console.log(visiable);
-  },[props.data]);
+  },[props.data, visiable]);
   return (
     <div>
       <h3>示例1：</h3>
@@ -95,16 +95,20 @@ const Child = (({data}) =>{
 function useStateDemo(){
     const [count, setCount] = useState(110);
     const [name, setName] = useState()
+    const [value,setForm] = useForm({
+      username : '',
+      password : ''
+    })
     useEffect(() => {
       // 使用浏览器的 API 更新页面标题
       console.log(`You clicked ${count} times`);
     });
-  
+    
+    console.log('value',value)
     return (
       <AppContext.Provider value={{
         username: count
       }}>
-        <button onClick={()=>{setCount(count + 1)}}>111</button>
         <Example data={count}></Example>
         <Example1></Example1>
         <Example2/>
@@ -114,6 +118,8 @@ function useStateDemo(){
         <button onClick={()=>setCount(count+1)}>update count </button>
         <button onClick={()=>setName('jack')}>update name </button>
         <Child data={name}></Child>
+        <input onChange = {setForm} name = "username"></input>
+        <input onChange = {setForm} name = "password"></input>
       </AppContext.Provider>
     );
 }
